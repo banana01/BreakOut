@@ -9,14 +9,14 @@ import java.awt.Component;
 public class TheGame extends JFrame
 {
 	private static final int WIDTH = 1000;
-	private static final int HEIGHT = 400;
+	private static final int HEIGHT = 800;
 
 	public TheGame()
 	{
 		super("PONG");
 		setSize(WIDTH,HEIGHT);
 
-		AirHockey game = new AirHockey(WIDTH, HEIGHT);
+		BreakOut game = new BreakOut(WIDTH, HEIGHT);
 
 		((Component)game).setFocusable(true);
 		getContentPane().add(game);

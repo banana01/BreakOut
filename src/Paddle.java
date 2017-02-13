@@ -84,11 +84,7 @@ public class Paddle extends Block
    {
 	   window.setColor(Color.white);
 	   window.fillRect(getX(), getY(), getWidth(), getHeight());
-	   if(isLeftSide && this.getX() < 490)
-	   {
-		   setX(getX()+(2*speed));
-	   }
-	   if(!isLeftSide && this.getX() < 970)
+	   if(this.getX() < 935)
 	   {
 		   setX(getX()+(2*speed));
 	   }
@@ -102,11 +98,7 @@ public class Paddle extends Block
 	   window.fillRect(getX(), getY(), getWidth(), getHeight());
 	   window.setColor(Color.white);
 	   window.fillRect(getX(), getY(), getWidth(), getHeight());
-	   if(isLeftSide && this.getX() >= 0)
-	   {
-		   setX(getX()-(2*speed));
-	   }
-	   if(!isLeftSide && this.getX() > 505)
+	   if(this.getX() >= 0)
 	   {
 		   setX(getX()-(2*speed));
 	   }
