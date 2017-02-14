@@ -14,7 +14,10 @@ public class BreakOutBlock extends Block
 	}
 	private void Destroy(Graphics window)
 	{
+		Color c = window.getColor();
+		window.setColor(Color.white);
 		window.fillRect(this.getX(), this.getY(), this.getWidth(), this.getHeight());
+		window.setColor(c);
 	}
 	public boolean Collide(Graphics window, Ball ball)
 	{

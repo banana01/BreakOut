@@ -31,23 +31,23 @@ public class BreakOut extends Canvas implements KeyListener, Runnable
 	{
 		//set up all variables related to the game
 		size = new Dimension(w-50, h-50);
-		ball = new Ball((int)size.getWidth()/2,(int) size.getHeight()/2, 10,10,Color.red,1 , 1);
+		ball = new Ball((int)size.getWidth()/2,(int) size.getHeight()/2, 5,5,Color.red,1 , 1);
 		int blocks = 0;
 		
 		paddle = new Paddle((int)size.getWidth()/2,(int) size.getHeight()-15, 50, 10, Color.black, 2);
-		for(int i = 0; i < (int)size.getWidth(); i += 25)
+		for(int i = 60; i < (int)size.getWidth()-60; i += 30)
 		{
-			for(int j = 0; j < (int)size.getHeight()/2; j += 25)
+			for(int j = 50; j < 200; j += 25)
 			{
 				blocks++;
 			}
 		}
 		BOBS = new BreakOutBlock[blocks];
-		for(int i = 0; i < (int)size.getWidth(); i += 25)
+		for(int i = 60; i < (int)size.getWidth()-60; i += 30)
 		{
-			for(int j = 0; j < 100; j += 25)
+			for(int j = 50; j < 200; j += 25)
 			{
-				BOBS[((i/25)*4)+j] = new BreakOutBlock(i,j, 20, 20 , new Color((int)Math.random()*255, (int)Math.random()*255, (int)Math.random()*255));
+				BOBS[(((i-60)/30)*6)+((j-50)/25)] = new BreakOutBlock(i,j, 29, 24 , new Color((int)(Math.random()*255), (int)(Math.random()*255), (int)(Math.random()*255)));
 			}
 			
 		}
@@ -77,9 +77,9 @@ public class BreakOut extends Canvas implements KeyListener, Runnable
 	   window.setColor(Color.white);
 	   
 	   
-	   window.fillRect((int)size.getWidth()/2, (int)size.getHeight()-40, window.getFontMetrics().stringWidth("Score::"+getScore()), 25);
+	   window.fillRect((int)size.getWidth()/2, (int)size.getHeight()-60, window.getFontMetrics().stringWidth("Score::"+getScore()), 25);
 	   window.setColor(c);
-	   window.drawString("Score::"+getScore(), (int)size.getWidth()/2, (int)size.getHeight()-20);
+	   window.drawString("Score::"+getScore(), (int)size.getWidth()/2, (int)size.getHeight()-50);
 	  
 
    }
@@ -92,6 +92,7 @@ public class BreakOut extends Canvas implements KeyListener, Runnable
 		graphToBack.fillRect(ball.getX(), ball.getY(), ball.getWidth(), ball.getHeight());
 		graphToBack.setColor(c);
 		ball.setPos((int)size.getWidth()/2, (int) size.getHeight()/2+50);
+		setScore(getScore()-5);
 		double p = (Math.random()-0.5)*4;
 		if(p > 0)
 			ball.setXSpeed((int)Math.ceil(p));
@@ -114,11 +115,51 @@ public class BreakOut extends Canvas implements KeyListener, Runnable
 		//create a graphics reference to the back ground image
 		//we will draw all changes on the background image
 		Graphics graphToBack = back.createGraphics();
-
+		for(int i = 0; i < BOBS.length; i++)
+		{
+			if(BOBS[i] != null)
+			{
+				BOBS[i].draw(graphToBack);
+			}
+			
+		}
 		ball.moveAndDraw(graphToBack);
 		paddle.draw(graphToBack);
 		drawScore(graphToBack);
 	
+		
+		for(int i = 0; i < BOBS.length; i++)
+		{
+			if(BOBS[i] != null)
+			{
+				if
+				(
+						(ball.getX() >= BOBS[i].getX() && ball.getX() <= BOBS[i].getX()+BOBS[i].getWidth()) &&
+						(ball.getY() >= BOBS[i].getY() && ball.getY() <= BOBS[i].getY()+BOBS[i].getHeight())/* ||
+						
+						(ball.getX()+ball.getWidth() >= BOBS[i].getX() && ball.getX()+ball.getWidth() <= BOBS[i].getX()+BOBS[i].getWidth()) &&
+						(ball.getY() >= BOBS[i].getY() && ball.getY() <= BOBS[i].getY()+BOBS[i].getHeight()) ||
+						
+						(ball.getX() >= BOBS[i].getX() && ball.getX() <= BOBS[i].getX()+BOBS[i].getWidth()) &&
+						(ball.getY()+ball.getHeight() >= BOBS[i].getY() && ball.getY()+ball.getHeight() <= BOBS[i].getY()+BOBS[i].getHeight()) ||
+						
+						(ball.getX()+ball.getWidth() >= BOBS[i].getX() && ball.getX()+ball.getWidth() <= BOBS[i].getX()+BOBS[i].getWidth()) &&
+						(ball.getY()+ball.getHeight() >= BOBS[i].getY() && ball.getY()+ball.getHeight() <= BOBS[i].getY()+BOBS[i].getHeight())*/
+				)
+				{
+					BOBS[i].Collide(graphToBack, ball);
+					BOBS[i] = null;
+					if(Math.random() > 0.1)
+						ball.setYSpeed(-ball.getYSpeed());	
+					else 
+						ball.setXSpeed(-ball.getXSpeed());	
+					
+					setScore(getScore()+1);
+					
+				}
+			}
+			
+		}
 		if(ball.getX() <= 5 || (ball.getX() >= (int)size.getWidth() -5))
 		{
 			ball.setXSpeed(-ball.getXSpeed());
@@ -129,7 +170,7 @@ public class BreakOut extends Canvas implements KeyListener, Runnable
 		}
 		if(ball.getY() >= (int)size.getHeight())
 		{
-			ball.setYSpeed(-ball.getYSpeed());
+			reset(graphToBack);
 		}
 
 		if
